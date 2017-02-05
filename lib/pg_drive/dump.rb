@@ -1,3 +1,4 @@
+require 'uri'
 module PgDrive
   module Dump
     class << self
@@ -25,13 +26,22 @@ module PgDrive
 
       def exec_pg_dump
         Open3.popen2e(
-          pg_env,
-          BACKUP_CMD,
-          pgroup: true
+            pg_env,
+            BACKUP_CMD,
+            pgroup: true
         )
       end
 
       def pg_env
+        if db_conf['url'].present?
+          db_url = URI.parse(db_conf['url'])
+          db_conf = db_conf.merge({
+                                      'user' => db_url.user,
+                                      'password' => db_url.password,
+                                      'host' => db_url.host,
+                                      'port' => db_url.port
+                                  })
+        end
         PG_ENV_MAP.map { |k, v| [k, db_conf[v].to_s] }.to_h
       end
 

@@ -35,8 +35,8 @@ module PgDrive
       def pg_env
         if db_conf['url'].present?
           db_url = URI.parse(db_conf['url'])
-          db_conf = db_conf.merge({
-                                      'user' => db_url.user,
+          db_conf.merge!({
+                                      'username' => db_url.user,
                                       'password' => db_url.password,
                                       'host' => db_url.host,
                                       'port' => db_url.port

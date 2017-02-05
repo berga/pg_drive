@@ -36,6 +36,7 @@ module PgDrive
         if db_conf['url'].present?
           db_url = URI.parse(db_conf['url'])
           db_conf.merge!({
+                                      'database' => db_url.path&.gsub('/',''),
                                       'username' => db_url.user,
                                       'password' => db_url.password,
                                       'host' => db_url.host,
